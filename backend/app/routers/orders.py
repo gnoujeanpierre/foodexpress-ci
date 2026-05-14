@@ -5,8 +5,8 @@ from typing import List
 from uuid import UUID
 
 from app.database import get_db
-from app.models import User, Order, OrderItem, Menu, OrderStatus
-from app.schemas import OrderCreate, OrderOut, OrderItemCreate
+from app.models import User, Order, OrderItem, Menu, Restaurant
+from app.schemas import OrderCreate, OrderOut
 from app.routers.auth import get_current_user
 
 router = APIRouter(prefix="/orders", tags=["Commandes"])
@@ -17,13 +17,10 @@ def create_order(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    # Verifier le restaurant existe
-    from app.models import Restaurant
     restaurant = db.query(Restaurant).filter(Restaurant.id == order_in.restaurant_id).first()
     if not restaurant:
         raise HTTPException(status_code=404, detail="Restaurant non trouve")
 
-    # Calculer le total
     total = 0
     order_items = []
     for item in order_in.items:
@@ -39,7 +36,6 @@ def create_order(
             notes=item.notes
         ))
 
-    # Frais de livraison fixes (a adapter)
     delivery_fee = 500
 
     order = Order(
@@ -51,9 +47,14 @@ def create_order(
         total_amount_fcfa=total,
         delivery_fee_fcfa=delivery_fee,
         payment_method=order_in.payment_method,
-        items=order_items
     )
     db.add(order)
+    db.flush()  # Obtient l ID de la commande
+
+    for item in order_items:
+        item.order_id = order.id
+        db.add(item)
+
     db.commit()
     db.refresh(order)
     return order
@@ -84,10 +85,25 @@ def update_status(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    # Verification manuelle des roles
+    if current_user.role not in ["restaurateur", "admin", "livreur"]:
+        raise HTTPException(status_code=403, detail="Acces refuse: seuls restaurateur, admin ou livreur peuvent changer le statut")
+
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Commande non trouvee")
-    # TODO: verifier les permissions selon le role
+    
+    if current_user.role == "restaurateur":
+        restaurant = db.query(Restaurant).filter(Restaurant.id == order.restaurant_id, Restaurant.owner_id == current_user.id).first()
+        if not restaurant:
+            raise HTTPException(status_code=403, detail="Vous n etes pas le proprietaire de ce restaurant")
+    
+    if current_user.role == "livreur":
+        from app.models import Delivery
+        delivery = db.query(Delivery).filter(Delivery.order_id == order_id, Delivery.driver_id == current_user.id).first()
+        if not delivery:
+            raise HTTPException(status_code=403, detail="Vous n etes pas assigne a cette livraison")
+
     order.status = new_status
     db.commit()
     db.refresh(order)
