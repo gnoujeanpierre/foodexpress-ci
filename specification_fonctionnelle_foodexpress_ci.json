@@ -1,0 +1,180 @@
+{
+  "titre": "Spécification Fonctionnelle — FoodExpress-CI",
+  "version": "1.0",
+  "date_redaction": "13/05/2026",
+  "redacteur": "Analyste Fonctionnel — La TEC",
+  "projet": "FoodExpress-CI",
+  "contexte": "FoodExpress-CI est une application mobile de livraison de repas destinée au marché d'Abidjan, commanditée par le client RestoGroup Abidjan. Le contexte digital en Côte d'Ivoire (2026) impose de prendre en compte les spécificités locales : adoption massive des paiements mobiles (Wave, Orange Money, MTN MoMo), réseau internet intermittent en 3G/4G, multilinguisme (français principal, nouchi, langues locales). Le budget indicatif est de 6 500 000 FCFA pour un délai de 10 semaines (MVP), avec une maintenance annuelle de 1 200 000 FCFA. L'application vise iOS et Android avec géolocalisation, tableau de bord administrateur, et intégration des APIs de paiement mobile.",
+  "objectifs": [
+    "Permettre à un client final de commander un repas en moins de 3 minutes depuis son mobile",
+    "Intégrer nativement les paiements Wave et Orange Money avec confirmation sous 15 secondes",
+    "Fournir un tableau de bord admin temps réel pour RestoGroup Abidjan (commandes, revenus, livreurs)",
+    "Assurer la disponibilité de l'app offline-first pour consultation des menus et suivi de commande en mode dégradé",
+    "Atteindre 1 000 commandes mensuelles dès le 3ème mois post-livraison"
+  ],
+  "perimetre_inclus": [
+    "Application mobile iOS et Android (React Native ou Flutter)",
+    "Backend API REST sécurisé avec gestion des utilisateurs, restaurants, menus, commandes, livraisons",
+    "Intégration APIs Wave et Orange Money (Côte d'Ivoire)",
+    "Géolocalisation GPS temps réel des livreurs et suivi de livraison",
+    "Tableau de bord administrateur web (React/Vue)",
+    "Système de notation et avis client",
+    "Notifications push (Firebase Cloud Messaging) pour statuts de commande",
+    "Gestion des profils multi-acteurs : Client, Restaurateur, Livreur, Admin"
+  ],
+  "perimetre_exclu": [
+    "Développement d'un site web de commande grand public (hors MVP, uniquement l'app mobile)",
+    "Intégration Moov Money (hors scope initial, à étudier en V2)",
+    "Module de fidélité avancé avec points et récompenses (V2)",
+    "Intelligence artificielle / chatbot de recommandation (V2)",
+    "Gestion comptable et paie des livreurs (dépend du client, hors app)"
+  ],
+  "acteurs": [
+    "Client final (consommateur à Abidjan, utilisant un smartphone Android/iOS basique ou haut de gamme)",
+    "Restaurateur / Vendeur (partenaire RestoGroup, gère son menu et ses commandes via l'app)",
+    "Livreur (motocycliste ou cycliste, équipé d'un smartphone Android, géolocalisé en temps réel)",
+    "Administrateur RestoGroup (supervise les opérations, les KPIs et la modération via le back-office web)",
+    "Support Technique La TEC (maintenance, correctifs, évolutions post-MVP)"
+  ],
+  "users_stories": [
+    {
+      "id": "US-001",
+      "en_tant_que": "Client final",
+      "je_veux": "consulter les menus des restaurants partenaires autour de moi",
+      "afin_de": "choisir mon repas rapidement sans me déplacer",
+      "critere_acceptation": "Le client visualise la liste des restaurants dans un rayon de 5km en moins de 3 secondes avec photo, prix en FCFA et temps de livraison estimé. Test : affichage correct sur connexion 3G lente (1 Mbps).",
+      "priorite": "Haute",
+      "effort_jours": 3.5
+    },
+    {
+      "id": "US-002",
+      "en_tant_que": "Client final",
+      "je_veux": "payer ma commande via Wave ou Orange Money directement dans l'app",
+      "afin_de": "ne pas avoir à gérer du liquide à la livraison",
+      "critere_acceptation": "Le paiement est initié via API partenaire (Wave/OM), le client reçoit une notification de confirmation sous 15 secondes, et le statut de commande passe à 'Payée' dans le backend. Test : simulation de paiement réussi et échoué.",
+      "priorite": "Haute",
+      "effort_jours": 5.0
+    },
+    {
+      "id": "US-003",
+      "en_tant_que": "Livreur",
+      "je_veux": "recevoir une alerte push avec l'adresse de livraison et le chemin optimal",
+      "afin_de": "livrer le repas dans les délais impartis et maximiser mes courses",
+      "critere_acceptation": "Le livreur reçoit une notification push avec adresse, nom client, téléphone et itinéraire Google Maps/ OSM dès qu'un restaurateur valide la préparation. Test : notification reçue en < 5s sur Android 10+.",
+      "priorite": "Haute",
+      "effort_jours": 4.0
+    },
+    {
+      "id": "US-004",
+      "en_tant_que": "Restaurateur",
+      "je_veux": "marquer une commande comme 'Prête' ou 'Refusée' depuis mon tableau de bord",
+      "afin_de": "informer le livreur et le client en temps réel du statut de leur commande",
+      "critere_acceptation": "Le changement de statut est reflété sur l'app client et livreur en < 3 secondes. Si refusée, un motif est demandé et le remboursement automatique est déclenché. Test : WebSocket ou polling < 3s.",
+      "priorite": "Moyenne",
+      "effort_jours": 2.5
+    },
+    {
+      "id": "US-005",
+      "en_tant_que": "Client final",
+      "je_veux": "suivre la position du livreur sur une carte en temps réel",
+      "afin_de": "savoir quand descendre pour récupérer ma commande",
+      "critere_acceptation": "La carte affiche la position GPS du livreur mise à jour toutes les 10 secondes avec un marqueur animé. Test : simulation de déplacement du livreur, vérification de la latence d'affichage < 12s.",
+      "priorite": "Moyenne",
+      "effort_jours": 4.5
+    },
+    {
+      "id": "US-006",
+      "en_tant_que": "Administrateur RestoGroup",
+      "je_veux": "consulter un tableau de bord avec le nombre de commandes du jour, le chiffre d'affaires et les livreurs actifs",
+      "afin_de": "piloter l'activité de livraison et prendre des décisions opérationnelles",
+      "critere_acceptation": "Le dashboard affiche les KPIs en temps réel (rafraîchissement auto toutes les 30s), avec possibilité d'export CSV par jour. Test : création de 10 commandes fictives, vérification de la somme CA et du compteur livreurs.",
+      "priorite": "Moyenne",
+      "effort_jours": 4.0
+    },
+    {
+      "id": "US-007",
+      "en_tant_que": "Client final",
+      "je_veux": "consulter mon historique de commandes et laisser une note/commentaire",
+      "afin_de": "recommander ou signaler un problème sur un restaurant ou un livreur",
+      "critere_acceptation": "L'historique affiche les 20 dernières commandes avec statut, montant, date. L'avis est soumis avec note 1-5 étoiles et texte < 500 caractères, modéré avant publication. Test : soumission d'avis, vérification base de données.",
+      "priorite": "Basse",
+      "effort_jours": 3.0
+    }
+  ],
+  "regles_metier": [
+    {
+      "id": "RM-001",
+      "libelle": "Validation du paiement avant préparation",
+      "description": "Aucune commande ne peut être transmise au restaurateur tant que le paiement mobile (Wave ou Orange Money) n'est pas confirmé par l'API partenaire avec un statut 'SUCCESS'. En cas d'échec ou de timeout (> 5 min), la commande est annulée automatiquement.",
+      "declencheur": "Le client clique sur 'Payer maintenant'",
+      "consequence": "Le système appelle l'API de paiement, attend la confirmation, puis passe la commande au statut 'PAYEE' et la transmet au restaurateur. Si échec, statut 'ANNULEE' et notification au client.",
+      "priorite": "Haute"
+    },
+    {
+      "id": "RM-002",
+      "libelle": "Attribution automatique du livreur",
+      "description": "Lorsqu'une commande est marquée 'Prête' par le restaurateur, le système attribue automatiquement le livreur le plus proche (rayon < 2km) et disponible (statut 'En ligne', pas de course en cours). Si aucun livreur n'est disponible dans le rayon, le rayon s'étend à 5km. Si toujours aucun, notification admin.",
+      "declencheur": "Restaurateur change le statut de commande à 'Prête'",
+      "consequence": "Requête géospatiale sur la table des livreurs actifs, sélection du plus proche, envoi notification push au livreur, mise à jour statut commande 'En livraison'.",
+      "priorite": "Haute"
+    },
+    {
+      "id": "RM-003",
+      "libelle": "Gestion du mode hors-ligne (Offline-First)",
+      "description": "L'application mobile doit fonctionner en mode dégradé lorsque le réseau est intermittent (cas fréquent en Côte d'Ivoire). Les menus consultés récemment sont mis en cache local. Une commande initiée sans réseau est mise en file d'attente locale et synchronisée dès que la connexion revient, avec confirmation explicite au client.",
+      "declencheur": "Perte de connexion réseau (WiFi/3G/4G) détectée par l'app",
+      "consequence": "Basculement en mode offline : affichage cache, stockage local SQLite/Room des actions utilisateur, synchronisation différée avec indicateur visuel 'En attente de connexion'.",
+      "priorite": "Haute"
+    },
+    {
+      "id": "RM-004",
+      "libelle": "Frais de livraison dynamiques",
+      "description": "Les frais de livraison sont calculés en fonction de la distance restaurant-client (API de routage) et d'un tarif de base fixe par zone d'Abidjan (Plateau, Cocody, Yopougon, etc.). Un supplément s'applique pour les commandes > 5km et pour les heures de pointe (12h-14h, 19h-21h).",
+      "declencheur": "Le client sélectionne son adresse de livraison",
+      "consequence": "Calcul de la distance via API Maps, application de la grille tarifaire zone + distance + heure, affichage du montant des frais en FCFA avant validation du panier.",
+      "priorite": "Moyenne"
+    },
+    {
+      "id": "RM-005",
+      "libelle": "Modération des avis clients",
+      "description": "Tout avis laissé par un client (note + commentaire) est soumis à une modération automatique (filtre mots interdits) puis manuelle par l'admin RestoGroup avant publication publique. Un délai de 24h maximum est garanti pour la validation ou le rejet avec motif.",
+      "declencheur": "Soumission d'un avis par le client final",
+      "consequence": "Statut avis 'En attente', scan automatique, notification admin, après validation passage à 'Publié' et affichage sur la fiche restaurant. Si rejet, notification au client avec motif.",
+      "priorite": "Basse"
+    }
+  ],
+  "processus_cles": [
+    "Processus de commande client : Inscription/Connexion → Consultation menus → Ajout panier → Choix adresse → Calcul frais livraison → Paiement mobile (Wave/OM) → Confirmation → Suivi temps réel → Livraison → Notation",
+    "Processus restaurateur : Connexion tableau de bord → Réception commande → Acceptation/Refus avec motif → Préparation → Marquage 'Prête' → Handover au livreur",
+    "Processus livreur : Connexion app livreur → Mise en statut 'Disponible' → Réception alerte commande → Acceptation course → Navigation GPS → Livraison au client → Confirmation livraison (code OTP ou signature digitale) → Mise à jour statut 'Disponible'",
+    "Processus admin : Connexion back-office → Vue globale commandes en cours → Gestion litiges (remboursement, retard) → Modération avis → Export rapports CA/jour"
+  ],
+  "maquettes_description": "Écrans principaux de l'app mobile client : (1) Écran d'accueil avec localisation auto, barre de recherche et catégories de cuisine (Local, Fast-food, Pâtisserie). (2) Écran restaurant : photo de couverture, menu scrollable par catégorie, prix en FCFA, bouton 'Ajouter au panier'. (3) Écran panier : récapitulatif articles, choix adresse (avec carte), calcul frais livraison, total TTC, bouton 'Payer avec Wave / Orange Money'. (4) Écran suivi de commande : timeline verticale (Commandée → Payée → Préparation → En route → Livrée) avec carte temps réel du livreur. (5) Écran profil : historique, adresses favorites, moyens de paiement enregistrés, paramètres langue (Français / Nouchi). Tableau de bord web admin : Sidebar navigation (Dashboard, Commandes, Restaurants, Livreurs, Finances, Avis). Vue principale avec widgets KPI (cartes résumé) et tableau de données filtrable.",
+  "contraintes_techniques": [
+    "Compatibilité Android 8+ et iOS 14+ (smartphones basiques inclus, ex: Tecno, Itel, iPhone 6s)",
+    "Optimisation pour réseaux 3G/4G intermittents : compression images WebP, pagination API, cache local",
+    "Intégration APIs paiement mobile Côte d'Ivoire : Wave API (Côte d'Ivoire) et Orange Money API (Orange Money Developer)",
+    "Géolocalisation GPS précise malgré les imprécisions cartographiques locales à Abidjan (utilisation OpenStreetMap + Google Maps fallback)",
+    "Backend scalable : architecture serverless ou conteneurisée (Docker) pour supporter les pics de commandes midi/soir",
+    "Sécurité : chiffrement AES-256 des données sensibles, JWT pour authentification, conformité RGPD minimale (données utilisateurs)"
+  ],
+  "contraintes_reglementaires": [
+    "Conformité à la loi n° 2013-450 relative à la protection des données à caractère personnel en Côte d'Ivoire (loi PDCP)",
+    "Obligation de conservation des transactions financières pendant 10 ans selon la réglementation bancaire UEMOA (BCEAO)",
+    "Respect des conditions d'utilisation des APIs Wave et Orange Money (pas de stockage des PIN, pas de surtaxe cachée)",
+    "Déclaration du traitement de données personnelles auprès de l'Autorité de Régulation des Télécommunications/TIC de Côte d'Ivoire (ARTCI)"
+  ],
+  "livrables_attendus": [
+    "Spécification Fonctionnelle Complète (ce document) version 1.0",
+    "Architecture Technique et choix des stacks (mobile, backend, base de données, APIs)",
+    "Maquettes UI/UX haute fidélité (Figma) pour les 5 écrans principaux client + back-office admin",
+    "Code source de l'application mobile iOS/Android (repository Git)",
+    "Code source du backend API REST et du tableau de bord admin (repository Git)",
+    "Documentation API (Swagger/OpenAPI 3.0)",
+    "Plan de tests fonctionnels et rapport de recette",
+    "Manuel utilisateur (Client, Restaurateur, Livreur, Admin) en français",
+    "Dossier de déploiement et configuration production (CI/CD, Docker, cloud)"
+  ],
+  "langue": "français",
+  "devise": "FCFA"
+}
