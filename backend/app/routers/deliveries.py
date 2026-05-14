@@ -6,7 +6,7 @@ from uuid import UUID
 
 from app.database import get_db
 from app.models import User, Order, Delivery
-from app.routers.auth import get_current_user
+from app.routers.auth import get_current_user, require_role
 
 router = APIRouter(prefix="/deliveries", tags=["Livraisons"])
 
@@ -14,13 +14,19 @@ router = APIRouter(prefix="/deliveries", tags=["Livraisons"])
 def create_delivery(
     order_id: UUID,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_role("admin", "restaurateur"))
 ):
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Commande non trouvee")
     if db.query(Delivery).filter(Delivery.order_id == order_id).first():
         raise HTTPException(status_code=400, detail="Livraison deja creee")
+
+    if current_user.role == "restaurateur":
+        from app.models import Restaurant
+        restaurant = db.query(Restaurant).filter(Restaurant.id == order.restaurant_id, Restaurant.owner_id == current_user.id).first()
+        if not restaurant:
+            raise HTTPException(status_code=403, detail="Vous n'etes pas le proprietaire de ce restaurant")
 
     delivery = Delivery(order_id=order_id)
     db.add(delivery)
@@ -81,7 +87,7 @@ def assign_driver(
     delivery_id: UUID,
     driver_id: UUID,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_role("admin", "restaurateur"))
 ):
     delivery = db.query(Delivery).filter(Delivery.id == delivery_id).first()
     if not delivery:
@@ -98,11 +104,15 @@ def track_delivery(
     lon: float,
     status: str = None,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_role("admin", "livreur"))
 ):
     delivery = db.query(Delivery).filter(Delivery.id == delivery_id).first()
     if not delivery:
         raise HTTPException(status_code=404, detail="Livraison non trouvee")
+    
+    if current_user.role == "livreur" and str(delivery.driver_id) != str(current_user.id):
+        raise HTTPException(status_code=403, detail="Vous n'etes pas assigne a cette livraison")
+
     delivery.current_lat = lat
     delivery.current_lon = lon
     if status:

@@ -1,5 +1,5 @@
 ﻿"""Router Authentification JWT."""
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
@@ -9,7 +9,7 @@ import os
 import uuid
 
 from app.database import get_db
-from app.models import User
+from app.models import User, UserRole
 from app.schemas import UserRegister, Token
 
 router = APIRouter(prefix="/auth", tags=["Authentification"])
@@ -73,6 +73,16 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise HTTPException(status_code=404, detail="Utilisateur non trouve")
     return user
+
+def require_role(*allowed_roles: str):
+    def role_checker(current_user: User = Depends(get_current_user)):
+        if current_user.role not in allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Acces refuse: roles autorises {allowed_roles}"
+            )
+        return current_user
+    return role_checker
 
 @router.get("/me")
 def read_users_me(current_user: User = Depends(get_current_user)):
