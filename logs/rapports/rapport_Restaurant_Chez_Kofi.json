@@ -1,5 +1,5 @@
 {
-  "workflow": "commercial -> analyste_fonctionnel",
+  "workflow": "commercial -> analyste_fonctionnel -> chef_projet",
   "prospect": "Restaurant Chez Kofi",
   "client_final": "M. Kofi Achi",
   "besoin": {
@@ -12,21 +12,164 @@
     "localisation": "Abidjan Cocody"
   },
   "proposition_commerciale": {
-    "titre": "Proposition - Restaurant Chez Kofi",
+    "titre": "Proposition Commerciale pour Restaurant Chez Kofi",
     "destinataire": "Restaurant Chez Kofi",
-    "contenu_markdown": "# Proposition commerciale\\n\\n**Destinataire:** Restaurant Chez Kofi\\n\\n**Besoin:** Application mobile pour commandes en ligne et livraison\\n\\nLa TEC propose une solution sur mesure adaptee au marche ivoirien.\\n\\n**Paiement:** Orange Money, Wave, virement bancaire\\n\\nRestant a votre entiere disposition,\\n**La TEC — The Engineering & Creation**\\nAbidjan, Cote d Ivoire",
-    "prix_total_fcfa": 0,
-    "prix_total_eur": 0,
-    "delai_semaines": 0,
+    "contenu_markdown": "Bonjour,\n\nNous espérons que vous allez bien. Dans le contexte actuel où la digitalisation prend une place de plus en plus importante dans le secteur de la restauration, nous avons identifié une opportunité pour le Restaurant Chez Kofi d'améliorer son service client et d'augmenter ses ventes grâce à une application mobile dédiée.\n\n**Contexte :**  \nAvec l'essor des commandes en ligne et des livraisons à domicile, il est essentiel pour les restaurants de s'adapter aux nouvelles habitudes de consommation. Une application mobile permettra à vos clients de passer des commandes facilement, tout en offrant une expérience utilisateur fluide et agréable.\n\n**Solution :**  \nNous vous proposons de développer une application mobile sur mesure qui inclura :  \n- **Commandes en ligne** : Permettre à vos clients de commander directement depuis leur smartphone.  \n- **Livraison** : Intégration d'un système de livraison pour que vos plats arrivent directement chez vos clients.  \n- **Backend API** : Un système robuste pour gérer les commandes, les paiements et les notifications.\n\n**Prix et Délai :**  \nLe coût total pour le développement de l'application mobile et du backend API est de **3 500 000 FCFA** (environ **5 340 EUR**).  \nNous estimons un délai de **8 semaines** pour la livraison complète du projet, ce qui est réaliste pour le marché ivoirien.\n\n**Moyens de Paiement :**  \nNous acceptons les paiements via **Orange Money** et **Wave**, afin de faciliter les transactions pour vous et vos clients.\n\n**Conditions :**  \nUn acompte de 30% sera requis à la signature du contrat, le solde étant dû à la livraison de l'application.  \nNous nous engageons à fournir un support technique pendant 3 mois après la mise en service de l'application.\n\nNous serions ravis de discuter plus en détail de cette proposition et de répondre à toutes vos questions. N'hésitez pas à nous contacter pour convenir d'un rendez-vous.\n\nCordialement,  \n[Votre Nom]  \n[Votre Entreprise]  \n[Vos Coordonnées]",
+    "prix_total_fcfa": 3500000,
+    "prix_total_eur": 5340,
+    "delai_semaines": 8,
     "moyens_paiement": [
       "Orange Money",
-      "Wave",
-      "Virement"
+      "Wave"
     ],
-    "conditions": "50% a la commande, 50% a la livraison",
+    "conditions": "Acompte de 30% à la signature du contrat, solde dû à la livraison. Support technique de 3 mois inclus.",
     "date_emission": "14/05/2026"
   },
-  "specification_fonctionnelle": "```json\n{\n  \"titre\": \"Specification Fonctionnelle - Projet_Restaurant_Chez_Kofi\",\n  \"version\": \"1.0\",\n  \"date_redaction\": \"14/05/2026\",\n  \"contexte\": \"Le marché de la restauration en Côte d'Ivoire est en pleine expansion, avec une demande croissante pour les services de commande en ligne et de livraison. Les clients recherchent des solutions pratiques et rapides pour accéder à leurs plats préférés, surtout dans des zones comme Cocody à Abidjan. Les paiements mobiles sont devenus la norme, et les applications doivent être conçues pour fonctionner même avec un réseau intermittent.\",\n  \"objectifs\": [\n    \"Développer une application mobile intuitive pour faciliter les commandes en ligne et la livraison.\"\n  ],\n  \"perimetre_inclus\": [\n    \"Développement d'une application mobile pour Android et iOS.\",\n    \"Création d'une API backend pour gérer les commandes et les paiements.\",\n    \"Intégration des solutions de paiement mobile (Wave, Orange Money, MTN MoMo).\"\n  ],\n  \"perimetre_exclu\": [\n    \"Développement d'une version web de l'application.\",\n    \"Services de marketing ou de promotion de l'application.\"\n  ],\n  \"acteurs\": [\n    \"M. Kofi Achi (Client)\",\n    \"Développeurs (équipe technique)\",\n    \"Utilisateurs finaux (clients du restaurant)\"\n  ],\n  \"users_stories\": [\n    {\n      \"id\": \"US-001\",\n      \"en_tant_que\": \"Client\",\n      \"je_veux\": \"passer une commande en ligne\",\n      \"afin_de\": \"recevoir mes plats préférés à domicile\",\n      \"critere_acceptation\": \"L'utilisateur peut sélectionner des plats, ajouter au panier et passer commande avec succès.\",\n      \"priorite\": \"Haute\"\n    },\n    {\n      \"id\": \"US-002\",\n      \"en_tant_que\": \"Client\",\n      \"je_veux\": \"payer ma commande en ligne\",\n      \"afin_de\": \"faciliter le processus de commande sans espèces\",\n      \"critere_acceptation\": \"L'utilisateur peut choisir parmi plusieurs options de paiement mobile et recevoir une confirmation de paiement.\",\n      \"priorite\": \"Haute\"\n    },\n    {\n      \"id\": \"US-003\",\n      \"en_tant_que\": \"Client\",\n      \"je_veux\": \"suivre l'état de ma commande\",\n      \"afin_de\": \"savoir quand je vais recevoir ma commande\",\n      \"critere_acceptation\": \"L'utilisateur peut voir l'état de sa commande en temps réel dans l'application.\",\n      \"priorite\": \"Moyenne\"\n    },\n    {\n      \"id\": \"US-004\",\n      \"en_tant_que\": \"Client\",\n      \"je_veux\": \"recevoir des notifications sur les promotions\",\n      \"afin_de\": \"profiter des offres spéciales\",\n      \"critere_acceptation\": \"L'utilisateur reçoit des notifications push pour les promotions et les nouveaux plats.\",\n      \"priorite\": \"Basse\"\n    },\n    {\n      \"id\": \"US-005\",\n      \"en_tant_que\": \"Administrateur\",\n      \"je_veux\": \"gérer les commandes et les menus\",\n      \"afin_de\": \"maintenir l'application à jour avec les offres disponibles\",\n      \"critere_acceptation\": \"L'administrateur peut ajouter, modifier ou supprimer des plats et gérer les commandes en cours.\",\n      \"priorite\": \"Haute\"\n    }\n  ],\n  \"regles_metier\": [\n    {\n      \"id\": \"RM-001\",\n      \"libelle\": \"Gestion des paiements\",\n      \"description\": \"Tous les paiements doivent être traités via des solutions de paiement mobile reconnues en Côte d'Ivoire.\",\n      \"priorite\": \"Haute\"\n    },\n    {\n      \"id\": \"RM-002\",\n      \"libelle\": \"Notifications\",\n      \"description\": \"Les utilisateurs doivent recevoir une notification pour chaque étape de leur commande (confirmation, préparation, livraison).\",\n      \"priorite\": \"Moyenne\"\n    },\n    {\n      \"id\": \"RM-003\",\n      \"libelle\": \"Disponibilité des plats\",\n      \"description\": \"Les plats affichés dans l'application doivent être disponibles en temps réel pour éviter les commandes de plats épuisés.\",\n      \"priorite\": \"Haute\"\n    }\n  ],\n  \"contraintes_techniques\": [\n    \"L'application doit être optimisée pour fonctionner avec un réseau intermittent.\",\n    \"L'application doit être compatible avec les versions Android et iOS les plus courantes.\"\n  ],\n  \"livrables_attendus\": [\n    \"Application mobile fonctionnelle pour Android et iOS.\",\n    \"API backend opérationnelle.\",\n    \"Documentation utilisateur et technique.\"\n  ],\n  \"langue\": \"francais\",\n  \"devise\": \"FCFA\"\n}\n```",
-  "fichier_spec": "C:\\Users\\PC MARKET\\Desktop\\la_tec\\logs\\specifications\\spec_Projet_Restaurant_Chez_Kofi_20260514_133118.md",
+  "specification_fonctionnelle": "```json\n{\n  \"titre\": \"Specification Fonctionnelle - Projet_Restaurant_Chez_Kofi\",\n  \"version\": \"1.0\",\n  \"date_redaction\": \"14/05/2026\",\n  \"contexte\": \"Le marché de la restauration en Côte d'Ivoire est en pleine expansion, avec une demande croissante pour des solutions de commande en ligne et de livraison. Les clients recherchent des moyens pratiques pour commander leurs repas, surtout dans des zones comme Cocody à Abidjan. L'application mobile doit répondre à ces besoins tout en tenant compte des spécificités locales telles que les paiements mobiles et les problèmes de réseau intermittent.\",\n  \"objectifs\": [\n    \"Faciliter la commande en ligne pour les clients.\",\n    \"Optimiser le processus de livraison.\",\n    \"Améliorer l'expérience client.\"\n  ],\n  \"perimetre_inclus\": [\n    \"Développement d'une application mobile pour Android et iOS.\",\n    \"Création d'une API backend pour gérer les commandes et les paiements.\",\n    \"Intégration des systèmes de paiement mobile (Wave, Orange Money, MTN MoMo).\"\n  ],\n  \"perimetre_exclu\": [\n    \"Développement d'une version web de l'application.\",\n    \"Gestion des stocks et des approvisionnements.\"\n  ],\n  \"acteurs\": [\n    \"M. Kofi Achi (Client)\",\n    \"Développeurs (équipe technique)\",\n    \"Clients (utilisateurs finaux)\"\n  ],\n  \"users_stories\": [\n    {\n      \"id\": \"US-001\",\n      \"en_tant_que\": \"client\",\n      \"je_veux\": \"commander un repas en ligne\",\n      \"afin_de\": \"recevoir ma commande à domicile\",\n      \"critere_acceptation\": \"L'utilisateur peut sélectionner des plats, ajouter au panier et passer commande.\",\n      \"priorite\": \"Haute\"\n    },\n    {\n      \"id\": \"US-002\",\n      \"en_tant_que\": \"client\",\n      \"je_veux\": \"payer ma commande via mobile\",\n      \"afin_de\": \"faciliter le processus de paiement\",\n      \"critere_acceptation\": \"L'utilisateur peut choisir entre Wave, Orange Money et MTN MoMo pour le paiement.\",\n      \"priorite\": \"Haute\"\n    },\n    {\n      \"id\": \"US-003\",\n      \"en_tant_que\": \"client\",\n      \"je_veux\": \"suivre ma commande en temps réel\",\n      \"afin_de\": \"savoir quand ma commande arrive\",\n      \"critere_acceptation\": \"L'utilisateur reçoit des notifications sur l'état de sa commande.\",\n      \"priorite\": \"Moyenne\"\n    },\n    {\n      \"id\": \"US-004\",\n      \"en_tant_que\": \"client\",\n      \"je_veux\": \"créer un compte utilisateur\",\n      \"afin_de\": \"enregistrer mes informations et mes commandes précédentes\",\n      \"critere_acceptation\": \"L'utilisateur peut s'inscrire et se connecter avec ses informations.\",\n      \"priorite\": \"Moyenne\"\n    },\n    {\n      \"id\": \"US-005\",\n      \"en_tant_que\": \"administrateur\",\n      \"je_veux\": \"gérer les commandes et les utilisateurs\",\n      \"afin_de\": \"optimiser le service client\",\n      \"critere_acceptation\": \"L'administrateur peut voir toutes les commandes et les informations des utilisateurs.\",\n      \"priorite\": \"Basse\"\n    }\n  ],\n  \"regles_metier\": [\n    {\n      \"id\": \"RM-001\",\n      \"libelle\": \"Validation de la commande\",\n      \"description\": \"Une commande ne peut être validée que si tous les articles sont disponibles.\",\n      \"priorite\": \"Haute\"\n    },\n    {\n      \"id\": \"RM-002\",\n      \"libelle\": \"Limite de paiement\",\n      \"description\": \"Le montant maximum d'une commande ne doit pas dépasser 100,000 FCFA.\",\n      \"priorite\": \"Moyenne\"\n    },\n    {\n      \"id\": \"RM-003\",\n      \"libelle\": \"Notifications de livraison\",\n      \"description\": \"Les clients doivent recevoir une notification lorsque leur commande est en route.\",\n      \"priorite\": \"Basse\"\n    }\n  ],\n  \"contraintes_techniques\": [\n    \"L'application doit être compatible avec les versions Android et iOS.\",\n    \"L'application doit fonctionner même avec un réseau intermittent.\"\n  ],\n  \"livrables_attendus\": [\n    \"Application mobile fonctionnelle pour Android et iOS.\",\n    \"API backend opérationnelle.\",\n    \"Documentation technique et utilisateur.\"\n  ],\n  \"langue\": \"francais\",\n  \"devise\": \"FCFA\"\n}\n```",
+  "plan_projet": {
+    "titre": "Plan de Projet - Projet_Restaurant_Chez_Kofi",
+    "projet_id": "PROJ-76DACFD8",
+    "date_creation": "14/05/2026",
+    "resume_spec": "Le projet vise à développer une application mobile pour faciliter la commande en ligne et la livraison de repas en Côte d'Ivoire. Il doit intégrer des systèmes de paiement mobile et fonctionner avec un réseau intermittent.",
+    "taches": [
+      {
+        "id": "TACHE-698CC6",
+        "titre": "Conception de l'application",
+        "description": "Élaboration des maquettes et des spécifications techniques pour l'application mobile et l'API backend.",
+        "responsable": "Designer",
+        "duree_jours": 10,
+        "dependances": [],
+        "priorite": "Haute",
+        "livrable": "Maquettes et spécifications techniques"
+      },
+      {
+        "id": "TACHE-37D7A5",
+        "titre": "Développement de l'API backend",
+        "description": "Création de l'API pour gérer les commandes, les utilisateurs et les paiements.",
+        "responsable": "Developpeur Backend",
+        "duree_jours": 15,
+        "dependances": [
+          "1"
+        ],
+        "priorite": "Haute",
+        "livrable": "API backend opérationnelle"
+      },
+      {
+        "id": "TACHE-648649",
+        "titre": "Développement de l'application mobile - Frontend",
+        "description": "Développement de l'application mobile pour Android et iOS, intégrant les fonctionnalités de commande et de paiement.",
+        "responsable": "Developpeur Frontend",
+        "duree_jours": 20,
+        "dependances": [
+          "1"
+        ],
+        "priorite": "Haute",
+        "livrable": "Application mobile fonctionnelle"
+      },
+      {
+        "id": "TACHE-B9E19F",
+        "titre": "Intégration des systèmes de paiement",
+        "description": "Intégration des systèmes de paiement mobile (Wave, Orange Money, MTN MoMo) dans l'application.",
+        "responsable": "Developpeur Backend",
+        "duree_jours": 10,
+        "dependances": [
+          "2"
+        ],
+        "priorite": "Haute",
+        "livrable": "Systèmes de paiement intégrés"
+      },
+      {
+        "id": "TACHE-675466",
+        "titre": "Tests fonctionnels",
+        "description": "Réalisation de tests fonctionnels sur l'application mobile et l'API pour s'assurer de leur bon fonctionnement.",
+        "responsable": "QA",
+        "duree_jours": 10,
+        "dependances": [
+          "3",
+          "4"
+        ],
+        "priorite": "Moyenne",
+        "livrable": "Rapport de tests fonctionnels"
+      },
+      {
+        "id": "TACHE-82093D",
+        "titre": "Tests utilisateurs",
+        "description": "Organisation de sessions de tests avec des utilisateurs finaux pour recueillir des retours et ajuster l'application.",
+        "responsable": "QA",
+        "duree_jours": 5,
+        "dependances": [
+          "5"
+        ],
+        "priorite": "Moyenne",
+        "livrable": "Rapport de retours utilisateurs"
+      },
+      {
+        "id": "TACHE-2DA23D",
+        "titre": "Déploiement de l'application",
+        "description": "Déploiement de l'application mobile sur les stores (Google Play et App Store) et mise en ligne de l'API.",
+        "responsable": "DevOps",
+        "duree_jours": 5,
+        "dependances": [
+          "3",
+          "4"
+        ],
+        "priorite": "Haute",
+        "livrable": "Application déployée"
+      },
+      {
+        "id": "TACHE-DE86C2",
+        "titre": "Documentation technique et utilisateur",
+        "description": "Rédaction de la documentation technique pour les développeurs et d'un guide utilisateur pour les clients.",
+        "responsable": "Developpeur Backend",
+        "duree_jours": 5,
+        "dependances": [
+          "6"
+        ],
+        "priorite": "Basse",
+        "livrable": "Documentation complète"
+      }
+    ],
+    "planning": {
+      "date_debut": "14/05/2026",
+      "date_fin": "14/06/2026",
+      "duree_totale_semaines": 4,
+      "jalons": [
+        {
+          "nom": "Fin de la conception",
+          "date": "24/05/2026"
+        },
+        {
+          "nom": "Fin du développement",
+          "date": "03/06/2026"
+        },
+        {
+          "nom": "Fin des tests",
+          "date": "08/06/2026"
+        },
+        {
+          "nom": "Déploiement",
+          "date": "14/06/2026"
+        }
+      ]
+    },
+    "equipe_requise": [
+      "1 Dev Frontend",
+      "1 Dev Backend",
+      "1 Designer UI/UX",
+      "1 QA",
+      "1 DevOps"
+    ],
+    "risques": [
+      "Réseau intermittent pouvant retarder les tests et le déploiement.",
+      "Difficultés d'intégration avec les systèmes de paiement mobile.",
+      "Délais de validation des utilisateurs finaux pouvant impacter le calendrier."
+    ],
+    "budget_estime_fcfa": 3000000,
+    "notes": "Le budget doit couvrir tous les aspects du développement, y compris les tests et le déploiement."
+  },
+  "fichiers": {
+    "spec": "C:\\Users\\PC MARKET\\Desktop\\la_tec\\logs\\specifications\\spec_Projet_Restaurant_Chez_Kofi_20260514_142326.md",
+    "plan": "C:\\Users\\PC MARKET\\Desktop\\la_tec\\logs\\plans\\plan_Projet_Restaurant_Chez_Kofi_20260514_142340.json"
+  },
   "status": "workflow_complete"
 }

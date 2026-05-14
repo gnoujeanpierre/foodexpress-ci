@@ -1,6 +1,6 @@
 ﻿"""
 Orchestrateur La TEC — Coordination multi-agents
-Workflow: Commercial -> Analyste Fonctionnel
+Workflow: Commercial -> Analyste Fonctionnel -> Chef de Projet
 """
 
 import argparse
@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from agents.commercial_agent import CommercialAgent
 from agents.analyste_fonctionnel_agent import AnalysteFonctionnelAgent
+from agents.chef_projet_agent import ChefProjetAgent
 
 
 class OrchestrateurLaTEC:
@@ -20,6 +21,7 @@ class OrchestrateurLaTEC:
         self.verbose = verbose
         self.commercial = CommercialAgent(verbose=verbose)
         self.analyste = AnalysteFonctionnelAgent(verbose=verbose)
+        self.chef_projet = ChefProjetAgent(verbose=verbose)
 
     def run_prospect_complet(
         self,
@@ -31,34 +33,34 @@ class OrchestrateurLaTEC:
     ) -> Dict[str, Any]:
         print("=" * 60)
         print("   LA TEC — ORCHESTRATEUR MULTI-AGENTS")
-        print("   Workflow: Commercial -> Analyste Fonctionnel")
+        print("   Workflow: Commercial -> Analyste -> Chef de Projet")
         print("=" * 60)
 
         # --- ETAPE 1: Commercial ---
-        print(f"\\n>>> [1/2] AGENT COMMERCIAL: Prospection {nom_prospect}")
+        print(f"\n>>> [1/3] AGENT COMMERCIAL: Prospection {nom_prospect}")
         result_commercial = self.commercial.executer_pipeline(
             brief=brief, nom_prospect=nom_prospect, services=services,
         )
         besoin = result_commercial["besoin"]
         proposition = result_commercial["proposition"]
 
-        print(f"\\n   Besoin: {besoin['besoin_principal'][:80]}...")
+        print(f"\n   Besoin: {besoin['besoin_principal'][:80]}...")
         print(f"   Proposition: {proposition['titre']}")
         print(f"   Prix: {proposition['prix_total_fcfa']:,} FCFA")
 
         # --- ETAPE 2: Analyste Fonctionnel ---
-        print(f"\\n>>> [2/2] AGENT ANALYSTE FONCTIONNEL: Specification")
+        print(f"\n>>> [2/3] AGENT ANALYSTE FONCTIONNEL: Specification")
         brief_enrichi = (
-            f"PROSPECT: {nom_prospect}\\n"
-            f"BESOIN: {besoin['besoin_principal']}\\n"
-            f"SECTEUR: {besoin['secteur_activite']}\\n"
-            f"TAILLE: {besoin['taille_entreprise']}\\n"
-            f"LOCALISATION: {besoin['localisation']}\\n\\n"
-            f"PROPOSITION:\\n"
-            f"Services: {', '.join(services)}\\n"
-            f"Prix: {proposition['prix_total_fcfa']:,} FCFA\\n"
-            f"Delai: {proposition['delai_semaines']} semaines\\n\\n"
-            f"BRIEF ORIGINAL:\\n{brief}"
+            f"PROSPECT: {nom_prospect}\n"
+            f"BESOIN: {besoin['besoin_principal']}\n"
+            f"SECTEUR: {besoin['secteur_activite']}\n"
+            f"TAILLE: {besoin['taille_entreprise']}\n"
+            f"LOCALISATION: {besoin['localisation']}\n\n"
+            f"PROPOSITION:\n"
+            f"Services: {', '.join(services)}\n"
+            f"Prix: {proposition['prix_total_fcfa']:,} FCFA\n"
+            f"Delai: {proposition['delai_semaines']} semaines\n\n"
+            f"BRIEF ORIGINAL:\n{brief}"
         )
 
         result_analyste = self.analyste.executer_pipeline(
@@ -68,16 +70,32 @@ class OrchestrateurLaTEC:
             budget_fcfa=budget_fcfa,
         )
 
-        print(f"\\n   Spec sauvegardee: {result_analyste['fichier']}")
+        print(f"\n   Spec sauvegardee: {result_analyste['fichier']}")
 
+        # --- ETAPE 3: Chef de Projet ---
+        print(f"\n>>> [3/3] AGENT CHEF DE PROJET: Planification")
+        result_chef = self.chef_projet.executer_pipeline(
+            spec_json=result_analyste["specification"],
+            nom_projet=f"Projet_{nom_prospect.replace(' ', '_')}",
+            client=client_final,
+            budget_fcfa=budget_fcfa,
+        )
+
+        print(f"\n   Plan sauvegarde: {result_chef['fichier']}")
+
+        # --- RESULTAT FINAL ---
         return {
-            "workflow": "commercial -> analyste_fonctionnel",
+            "workflow": "commercial -> analyste_fonctionnel -> chef_projet",
             "prospect": nom_prospect,
             "client_final": client_final,
             "besoin": besoin,
             "proposition_commerciale": proposition,
             "specification_fonctionnelle": result_analyste["specification"],
-            "fichier_spec": result_analyste["fichier"],
+            "plan_projet": result_chef["plan"],
+            "fichiers": {
+                "spec": result_analyste["fichier"],
+                "plan": result_chef["fichier"],
+            },
             "status": "workflow_complete",
         }
 
@@ -101,6 +119,7 @@ def main():
         budget_fcfa=args.budget,
     )
 
+    # Sauvegarde du rapport final
     rapport_dir = Path(__file__).resolve().parent.parent / "logs" / "rapports"
     rapport_dir.mkdir(parents=True, exist_ok=True)
     rapport_file = rapport_dir / f"rapport_{args.prospect.replace(' ', '_')}.json"
@@ -108,7 +127,7 @@ def main():
         json.dumps(resultat, indent=2, ensure_ascii=False), encoding="utf-8"
     )
 
-    print("\\n" + "=" * 60)
+    print("\n" + "=" * 60)
     print("   WORKFLOW TERMINE AVEC SUCCES")
     print(f"   Rapport: {rapport_file}")
     print("=" * 60)

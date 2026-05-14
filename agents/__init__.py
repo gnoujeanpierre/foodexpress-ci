@@ -1,3 +1,4 @@
 ﻿from .commercial_agent import CommercialAgent
 from .analyste_fonctionnel_agent import AnalysteFonctionnelAgent
+from .chef_projet_agent import ChefProjetAgent
 from .orchestrateur import OrchestrateurLaTEC
