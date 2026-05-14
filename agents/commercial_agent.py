@@ -10,6 +10,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from crewai import Agent, Task, Crew, Process
+from crewai.llm import LLM
 from pydantic import BaseModel, Field
 
 
@@ -39,9 +40,22 @@ class PropositionCommerciale(BaseModel):
 
 # --- AGENT ---
 
+def _get_llm() -> LLM:
+    api_key = os.getenv("OPENROUTER_API_KEY") or os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise RuntimeError("Cle API manquante. Definissez OPENROUTER_API_KEY dans .env")
+    return LLM(
+        model="openai/gpt-4o-mini",
+        api_key=api_key,
+        base_url="https://openrouter.ai/api/v1",
+        temperature=0.3,
+    )
+
+
 class CommercialAgent:
     def __init__(self, verbose: bool = False):
         self.verbose = verbose
+        self.llm = _get_llm()
         self.agent = Agent(
             role="Commercial Senior",
             goal="Prospection B2B et propositions commerciales en Afrique francophone",
@@ -49,6 +63,7 @@ class CommercialAgent:
                 "Expert en prospection digitale en Cote d Ivoire. "
                 "Maitrise les specificites locales : paiement mobile, contexte PME, delais realistes."
             ),
+            llm=self.llm,
             verbose=verbose,
             allow_delegation=False,
         )
