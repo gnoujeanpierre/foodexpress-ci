@@ -28,7 +28,7 @@ class BesoinClient(BaseModel):
 
 class PropositionCommerciale(BaseModel):
     titre: str
-    destinataire: str
+    destinataire: str = ""  # Optionnel avec defaut vide
     contenu_markdown: str
     prix_total_fcfa: int = 0
     prix_total_eur: int = 0
@@ -110,12 +110,12 @@ class CommercialAgent:
             f"- Delai realiste en semaines pour le marche ivoirien\\n"
             f"- Ton professionnel, chaleureux, adapte au contexte local\\n"
             f"- Structure: salutation, contexte, solution, prix/delai, conditions, CTA, signature\\n\\n"
-            f"Reponds avec un JSON contenant: titre, contenu_markdown, prix_total_fcfa, "
+            f"Reponds avec un JSON contenant: titre, destinataire, contenu_markdown, prix_total_fcfa, "
             f"prix_total_eur, delai_semaines, moyens_paiement, conditions."
         )
         task = Task(
             description=prompt,
-            expected_output="JSON valide PropositionCommerciale.",
+            expected_output="JSON valide PropositionCommerciale avec tous les champs.",
             agent=self.agent,
         )
         crew = Crew(agents=[self.agent], tasks=[task], process=Process.sequential, verbose=self.verbose)
@@ -128,6 +128,11 @@ class CommercialAgent:
             elif "```" in raw:
                 raw = raw.split("```")[1].split("```")[0].strip()
             data = json.loads(raw)
+
+            # Injection securisee du destinataire si manquant
+            if "destinataire" not in data or not data["destinataire"]:
+                data["destinataire"] = nom_prospect
+
             return PropositionCommerciale(**data)
         except Exception as e:
             print(f"[WARN] Parsing proposition imparfait ({e}), fallback.")
@@ -157,6 +162,11 @@ class CommercialAgent:
         print("[Etape 2/2] Redaction de la proposition...")
         proposition = self.tache_rediger_proposition(besoin, nom_prospect, services)
         
+        print(f"\\n   ✅ Proposition: {proposition.titre}")
+        print(f"   💰 Prix: {proposition.prix_total_fcfa:,} FCFA")
+        print(f"   📅 Delai: {proposition.delai_semaines} semaines")
+        print(f"   👤 Destinataire: {proposition.destinataire}")
+        
         return {
             "besoin": besoin.model_dump(),
             "proposition": proposition.model_dump(),
@@ -177,7 +187,6 @@ def main():
         brief=args.brief, nom_prospect=args.prospect, services=args.services
     )
     print(f"\\n✅ Pipeline termine pour {args.prospect}")
-    print(f"   Proposition: {result['proposition']['titre']}")
 
 
 if __name__ == "__main__":
